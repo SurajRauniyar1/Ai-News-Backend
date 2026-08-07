@@ -1,0 +1,44 @@
+from fastapi import Depends
+from fastapi import HTTPException
+
+from sqlalchemy.orm import Session
+
+from app.database.database import get_db
+
+from app.auth.oauth import oauth2_scheme
+
+from app.auth.security import verify_token
+
+from app.repositories.user_repository import UserRepository
+
+
+def get_current_user(
+
+    token: str = Depends(oauth2_scheme),
+
+    db: Session = Depends(get_db)
+
+):
+
+    payload = verify_token(token)
+
+    if payload is None:
+
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid Token"
+        )
+
+    user = UserRepository.get_by_email(
+        db,
+        payload["sub"]
+    )
+
+    if not user:
+
+        raise HTTPException(
+            status_code=401,
+            detail="User not found"
+        )
+
+    return user
