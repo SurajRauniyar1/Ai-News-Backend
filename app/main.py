@@ -46,14 +46,16 @@ app.add_exception_handler(
 origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-    "https://your-vercel-app.vercel.app",
+
+    "https://at-news-frontend-git-main-surajrauniyar1s-projects.vercel.app",
+
+    "https://at-news-frontend.vercel.app",   # if you later add a custom Vercel domain
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
